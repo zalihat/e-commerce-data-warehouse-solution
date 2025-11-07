@@ -1,0 +1,23 @@
+{
+  "customers": {
+    "last_ingested_at": "2025-11-06 19:40:35"
+  },
+  "resellers": {
+    "last_ingested_at": "2025-11-06 19:40:36"
+  },
+  "products": {
+    "last_ingested_at": "2025-11-06 19:40:36"
+  },
+  "orders": {
+    "last_ingested_at": "2025-11-06 19:40:36"
+  },
+  "order_items": {
+    "last_ingested_at": "2025-11-06 19:40:36"
+  },
+  "shipments": {
+    "last_ingested_at": "2025-11-06 19:40:36"
+  },
+  "payments": {
+    "last_ingested_at": "2025-11-06 19:40:36"
+  }
+}
