@@ -92,7 +92,7 @@ def update_state(table_name, new_timestamp, state):
 # ===================================================
 # 🚀 Ingest Function
 # ===================================================
-def ingest_table(table_name, backfill=False):
+def ingest_table(table_name, backfill=False, partition=True):
     """Extract table from MySQL and load to S3 (Parquet partitioned by year/month/day)"""
     state = load_state()
     last_ingested_at = get_last_ingested_time(table_name, state)
@@ -115,12 +115,17 @@ def ingest_table(table_name, backfill=False):
     # Add ingestion metadata
     df["ingested_at"] = datetime.utcnow()
     partition_date = datetime.utcnow()
-    year, month, day = partition_date.strftime("%Y"), partition_date.strftime("%m"), partition_date.strftime("%d")
     raw_data_prefix = 'bronze'
-    # Create partitioned path
-    object_prefix = f"{raw_data_prefix}/{table_name}/year={year}/month={month}/day={day}/"
-    file_name = f"{table_name}_{partition_date.strftime('%Y%m%d_%H%M%S')}.parquet"
-    object_name = f"{object_prefix}{file_name}"
+    if partition == False:
+        file_name = f"{table_name}_{partition_date.strftime('%Y%m%d_%H%M%S')}.parquet"
+        object_name = f"{raw_data_prefix}/{table_name}/{file_name}"
+    else:
+        year, month, day = partition_date.strftime("%Y"), partition_date.strftime("%m"), partition_date.strftime("%d")
+       
+        # Create partitioned path
+        object_prefix = f"{raw_data_prefix}/{table_name}/year={year}/month={month}/day={day}/"
+        file_name = f"{table_name}_{partition_date.strftime('%Y%m%d_%H%M%S')}.parquet"
+        object_name = f"{object_prefix}{file_name}"
 
     # Convert to Parquet in memory
     parquet_buffer = io.BytesIO()
@@ -158,9 +163,12 @@ if __name__ == "__main__":
         "payments",
     ]
 
-    FULL_BACKFILL = True  # toggle to True to backfill everything
+    FULL_BACKFILL = False  # toggle to True to backfill everything
 
     for table in tables:
-        ingest_table(table, backfill=FULL_BACKFILL)
+        if table in ("customers", "products","resellers"):
+             ingest_table(table, backfill=FULL_BACKFILL, partition=False)
+        else:
+            ingest_table(table, backfill=FULL_BACKFILL, partition=True)
 
     print("\n🎉 All tables processed successfully.")
