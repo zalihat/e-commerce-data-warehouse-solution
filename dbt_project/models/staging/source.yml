@@ -1,0 +1,13 @@
+version: 2
+
+sources:
+  - name: raw
+    database: ECOMMERCE_DW
+    schema: RAW
+    tables:
+      - name: customers_ext
+      - name: orders_ext
+      - name: order_items_ext
+      - name: products_ext
+      - name: payments_ext
+      - name: shipments_ext
