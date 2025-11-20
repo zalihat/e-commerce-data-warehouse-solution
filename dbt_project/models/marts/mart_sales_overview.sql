@@ -1,23 +1,6 @@
-with order_items as (
-    select    
-        order_item_id,
-        order_id,
-        {{ calculate_discount_amount('discount', 'unit_price', 'quantity') }} 
-            as discount_amount
-    from {{ref('stg_order_items')}}
-),
 
-sales_items as (
-    select 
-        order_id,
-        count(distinct order_item_id) as number_of_items,
-        sum(discount_amount) as total_discount
-    from order_items
-    group by order_id
 
-),
-
-orders as (
+with  orders as (
     select
         order_id,
         order_date,
@@ -56,7 +39,7 @@ sales_overview as (
         sales_items.total_discount,
         c.country as customer_country
     from orders 
-    inner join sales_items 
+    inner join {{ref('int_order_discount')}} as sales_items
         on orders.order_id = sales_items.order_id
     inner join payments as p 
         on orders.order_id = p.order_id
