@@ -1,8 +1,8 @@
 select 
     product_id,
     name as product_name,
-    category,
-    price,
+    category as product_category,
+    price as product_price,
     reseller_id,
     created_at,
     updated_at

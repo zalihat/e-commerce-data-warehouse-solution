@@ -11,3 +11,4 @@ sources:
       - name: products_ext
       - name: payments_ext
       - name: shipments_ext
+      - name: resellers_ext

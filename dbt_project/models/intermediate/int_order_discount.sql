@@ -20,6 +20,6 @@ order_discount as (
 
 )
 select 
-*
+    *  
 from order_discount
 
