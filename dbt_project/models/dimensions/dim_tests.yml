@@ -1,0 +1,77 @@
+version: 2
+
+models:
+
+  # -----------------------------------
+  # dim_customers
+  # -----------------------------------
+  - name: dim_customers
+    description: "Customer dimension with SCD2 tracking"
+    columns:
+      - name: customer_id
+        tests:
+          - not_null
+
+      - name: customer_email
+        tests:
+          - not_null
+
+      - name: valid_from
+        tests:
+          - not_null
+
+      - name: is_current
+        tests:
+          - not_null
+
+      
+
+
+  # -----------------------------------
+  # dim_products
+  # -----------------------------------
+  - name: dim_products
+    description: "Product dimension with SCD2 tracking"
+    columns:
+      - name: product_id
+        tests:
+          - not_null
+
+      - name: product_name
+        tests:
+          - not_null
+
+      - name: product_category
+        tests:
+          - not_null
+
+      - name: valid_from
+        tests:
+          - not_null
+
+      - name: is_current
+        tests:
+          - not_null
+
+
+  # -----------------------------------
+  # dim_resellers
+  # -----------------------------------
+  - name: dim_resellers
+    description: "Reseller dimension with SCD2 tracking"
+    columns:
+      - name: reseller_id
+        tests:
+          - not_null
+
+      - name: reseller_name
+        tests:
+          - not_null
+
+      - name: valid_from
+        tests:
+          - not_null
+
+      - name: is_current
+        tests:
+          - not_null

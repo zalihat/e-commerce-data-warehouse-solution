@@ -4,5 +4,8 @@ select
     carrier as shipping_company,
     shipped_date,
     delivered_date,
-    created_at
+    tracking_number,
+    created_at,
+    updated_at
+
 from {{source('raw', 'shipments_ext')}}

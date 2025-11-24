@@ -5,7 +5,7 @@ with delivered_orders as (
         order_date,
         customer_id,
         total_amount
-    from {{ref('stg_orders')}}
+    from {{ref('fact_orders')}}
     where lower(order_status) = 'delivered'
 ),
 
@@ -17,9 +17,9 @@ customers_orders as (
         max(o.order_date) as last_order_date,
         count(distinct o.order_id) as number_of_orders,
         sum(o.total_amount) as total_revenue,
-        sum(d.total_discount) as total_discount
+        sum(d.discount_amount) as total_discount
     from delivered_orders as o
-    inner join {{ref('int_order_discount')}} as d
+    inner join {{ref('fact_order_items')}} as d
         on o.order_id = d.order_id
     group by customer_id
 
@@ -28,20 +28,21 @@ customers_orders as (
 customer_360 as (
     select
         c.customer_id,
-        first_name,
-        last_name,
-        email,
-        country,
-        signup_date
+        customer_full_name,
+        customer_email,
+        signup_date,
+        customer_country,
         first_order_date,
         last_order_date,
+        DATEDIFF(day, last_order_date, CURRENT_DATE() ) AS days_since_last_order,
         number_of_orders,
         total_revenue,
         total_discount
 
-    from {{ref('stg_customers')}} as c
+    from {{ref('dim_customers')}} as c
     left join customers_orders as co
     on c.customer_id = co.customer_id
+    where c.is_current = True
 
 )
 
