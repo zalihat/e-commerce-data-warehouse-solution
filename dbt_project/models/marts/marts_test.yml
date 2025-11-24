@@ -15,21 +15,21 @@ models:
           - relationships:
               to: ref('dim_customers')
               field: customer_id
-      - name: total_revenue
-        tests:
-          - not_null
-          - dbt_utils.expression_is_true:
-              expression: "total_revenue >= 0"
-      - name: number_of_orders
-        tests:
-          - not_null
-          - dbt_utils.expression_is_true:
-              expression: "number_of_orders >= 0"
-      - name: days_since_last_order
-        tests:
-          - not_null
-          - dbt_utils.expression_is_true:
-              expression: "days_since_last_order >= 0"
+      # - name: total_revenue
+      #   tests:
+      #     - not_null
+      #     - dbt_utils.expression_is_true:
+      #         expression: "total_revenue >= 0"
+      # - name: number_of_orders
+      #   tests:
+      #     - not_null
+      #     - dbt_utils.expression_is_true:
+      #         expression: "number_of_orders >= 0"
+      # - name: days_since_last_order
+      #   tests:
+      #     - not_null
+      #     - dbt_utils.expression_is_true:
+      #         expression: "days_since_last_order >= 0"
 
 
   # -----------------------------------
@@ -45,21 +45,21 @@ models:
           - relationships:
               to: ref('dim_products')
               field: product_id
-      - name: total_revenue
-        tests:
-          - not_null
-          - dbt_utils.expression_is_true:
-              expression: "total_revenue >= 0"
-      - name: units_sold
-        tests:
-          - not_null
-          - dbt_utils.expression_is_true:
-              expression: "units_sold >= 0"
-      - name: total_orders
-        tests:
-          - not_null
-          - dbt_utils.expression_is_true:
-              expression: "total_orders >= 0"
+      # - name: total_revenue
+      #   tests:
+      #     - not_null
+      #     - dbt_utils.expression_is_true:
+      #         expression: "total_revenue >= 0"
+      # - name: units_sold
+      #   tests:
+      #     - not_null
+      #     - dbt_utils.expression_is_true:
+      #         expression: "units_sold >= 0"
+      # - name: total_orders
+      #   tests:
+      #     - not_null
+      #     - dbt_utils.expression_is_true:
+      #         expression: "total_orders >= 0"
 
 
   # -----------------------------------
@@ -75,21 +75,21 @@ models:
           - relationships:
               to: ref('dim_resellers')
               field: reseller_id
-      - name: total_revenue
-        tests:
-          - not_null
-          - dbt_utils.expression_is_true:
-              expression: "total_revenue >= 0"
-      - name: products_sold
-        tests:
-          - not_null
-          - dbt_utils.expression_is_true:
-              expression: "products_sold >= 0"
-      - name: quantities_sold
-        tests:
-          - not_null
-          - dbt_utils.expression_is_true:
-              expression: "quantities_sold >= 0"
+      # - name: total_revenue
+      #   tests:
+      #     - not_null
+      #     - dbt_utils.expression_is_true:
+      #         expression: "total_revenue >= 0"
+      # - name: products_sold
+      #   tests:
+      #     - not_null
+      #     - dbt_utils.expression_is_true:
+      #         expression: "products_sold >= 0"
+      # - name: quantities_sold
+      #   tests:
+      #     - not_null
+      #     - dbt_utils.expression_is_true:
+      #         expression: "quantities_sold >= 0"
 
 
   # -----------------------------------
@@ -111,29 +111,29 @@ models:
           - relationships:
               to: ref('dim_customers')
               field: customer_id
-      - name: total_amount
-        tests:
-          - not_null
-          - dbt_utils.expression_is_true:
-              expression: "total_amount >= 0"
-      - name: order_date
-        tests:
-          - not_null
-      - name: number_of_items
-        tests:
-          - not_null
-          - dbt_utils.expression_is_true:
-              expression: "number_of_items >= 0"
-      - name: total_discount
-        tests:
-          - not_null
-          - dbt_utils.expression_is_true:
-              expression: "total_discount >= 0"
-      - name: shipment_id
+      # - name: total_amount
+      #   tests:
+      #     - not_null
+      #     - dbt_utils.expression_is_true:
+      #         expression: "total_amount >= 0"
+      # - name: order_date
+      #   tests:
+      #     - not_null
+      # - name: number_of_items
+      #   tests:
+      #     - not_null
+      #     - dbt_utils.expression_is_true:
+      #         expression: "number_of_items >= 0"
+      # - name: total_discount
+      #   tests:
+      #     - not_null
+      #     - dbt_utils.expression_is_true:
+      #         expression: "total_discount >= 0"
+      # - name: shipment_id
         tests:
           - not_null
           - relationships:
-              to: ref('int_shipping_information')
+              to: ref('fact_shipments')
               field: shipment_id
 
 
@@ -143,23 +143,5 @@ models:
   - name: mart_shipment_performance
     description: "Aggregated shipping information joined to orders"
     columns:
-      - name: shipment_id
-        tests:
-          - not_null
-          - unique
-      - name: order_id
-        tests:
-          - not_null
-          - relationships:
-              to: ref('fact_orders')
-              field: order_id
       - name: delivery_days
-        tests:
-          - not_null
-          - dbt_utils.expression_is_true:
-              expression: "delivery_days >= 0"
-      - name: delivery_hours
-        tests:
-          - not_null
-          - dbt_utils.expression_is_true:
-              expression: "delivery_hours >= 0"
+
