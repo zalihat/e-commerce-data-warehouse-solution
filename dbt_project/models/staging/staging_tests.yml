@@ -1,0 +1,191 @@
+version: 2
+
+models:
+
+  # -----------------------------------
+  # stg_customers
+  # -----------------------------------
+  - name: stg_customers
+    description: "Staging model for raw customers data."
+    columns:
+      - name: customer_id
+        tests:
+          - not_null
+
+      - name: customer_email
+        tests:
+          - not_null
+
+      - name: customer_full_name
+        tests:
+          - not_null
+
+      - name: signup_date
+        tests:
+          - not_null
+
+      - name: updated_at
+        tests:
+          - not_null
+
+
+  # -----------------------------------
+  # stg_order_items
+  # -----------------------------------
+  - name: stg_order_items
+    description: "Staging model for raw order items."
+    columns:
+      - name: order_item_id
+        tests:
+          - not_null
+
+      - name: order_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_orders')
+              field: order_id
+
+      - name: product_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_products')
+              field: product_id
+
+      - name: quantity
+        tests:
+          - not_null
+
+      - name: updated_at
+        tests:
+          - not_null
+
+
+  # -----------------------------------
+  # stg_payments
+  # -----------------------------------
+  - name: stg_payments
+    description: "Staging model for raw payments."
+    columns:
+      - name: payment_id
+        tests:
+          - not_null
+  
+
+      - name: order_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_orders')
+              field: order_id
+
+      - name: payment_provider
+        tests:
+          - not_null
+
+      - name: payment_amount
+        tests:
+          - not_null
+
+      - name: payment_status
+        tests:
+          - not_null
+
+      - name: updated_at
+        tests:
+          - not_null
+
+
+  # -----------------------------------
+  # stg_products
+  # -----------------------------------
+  - name: stg_products
+    description: "Staging model for raw product data."
+    columns:
+      - name: product_id
+        tests:
+          - not_null
+       
+
+      - name: product_name
+        tests:
+          - not_null
+
+      - name: product_category
+        tests:
+          - not_null
+
+      - name: product_price
+        tests:
+          - not_null
+
+      - name: reseller_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_resellers')
+              field: reseller_id
+
+      - name: updated_at
+        tests:
+          - not_null
+
+
+  # -----------------------------------
+  # stg_resellers
+  # -----------------------------------
+  - name: stg_resellers
+    description: "Staging model for raw reseller data."
+    columns:
+      - name: reseller_id
+        tests:
+          - not_null
+          
+
+      - name: reseller_name
+        tests:
+          - not_null
+
+      - name: reseller_email
+        tests:
+          - not_null
+
+      - name: updated_at
+        tests:
+          - not_null
+
+
+  # -----------------------------------
+  # stg_shipments
+  # -----------------------------------
+  - name: stg_shipments
+    description: "Staging model for raw shipment data."
+    columns:
+      - name: shipment_id
+        tests:
+          - not_null
+       
+
+      - name: order_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_orders')
+              field: order_id
+
+      - name: shipping_company
+        tests:
+          - not_null
+
+      - name: shipped_date
+        tests:
+          - not_null
+
+      - name: tracking_number
+        tests:
+          - not_null
+
+      - name: updated_at
+        tests:
+          - not_null

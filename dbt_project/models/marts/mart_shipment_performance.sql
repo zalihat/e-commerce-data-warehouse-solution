@@ -25,6 +25,6 @@ select
         / count(*) as shipment_success_rate
 
 from {{ ref('int_shipping_information') }} as s
-inner join {{ ref('stg_orders') }} as o
+inner join {{ ref('fact_orders') }} as o
     on s.order_id = o.order_id
 group by shipping_company

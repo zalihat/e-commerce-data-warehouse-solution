@@ -6,10 +6,11 @@ with item_performance as (
         order_id,
         order_item_id,
         quantity,
-        unit_price * quantity as revenue
-    from {{ref('stg_products')}} as p
-    left join {{ref('stg_order_items')}} as oi
+        revenue
+    from {{ref('dim_products')}} as p
+    left join {{ref('fact_order_items')}} as oi
         on p.product_id = oi.product_id
+    where p.is_current = True
 ),
 
 products_performance as (
@@ -28,7 +29,7 @@ products_performance as (
 
 select 
     r.reseller_id,
-    reselller_name,
+    reseller_name,
     reseller_email,
     reseller_country,
     reseller_join_date,
@@ -39,6 +40,8 @@ select
     quantities_sold
 
 
-from {{ref('stg_resellers')}} as r
+from {{ref('dim_resellers')}} as r
 left join products_performance as p
     on r.reseller_id = p.reseller_id
+
+where r.is_current = True

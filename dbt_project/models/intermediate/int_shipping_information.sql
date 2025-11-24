@@ -6,4 +6,4 @@ select
     shipping_company,
     datediff('day', shipped_date, delivered_date) as delivery_days,
     datediff('hour', shipped_date, delivered_date) as delivery_hours
-from {{ref('stg_shipments')}}
+from {{ref('fact_shipments')}}
