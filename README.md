@@ -143,20 +143,19 @@ Defined roles:
 
 Dagster orchestrates the full workflow:
 
-Ingest raw data → S3
+* Ingest raw data → S3
 
-Load into Snowflake stages
+* Refresh Snowflake external tables
 
-dbt transformations (Bronze → Silver → Gold)
+* dbt transformations (Bronze → Silver → Gold)
 
-Run data tests & documentation
+* Run data tests & documentation
 
-Publish marts & dashboards
 
 Features:
 
-Scheduling
+* Scheduling
 
-Dependency management
+* Dependency management
 
-Logs & monitoring
+* Logs & monitoring
