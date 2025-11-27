@@ -7,7 +7,7 @@ A cloud-native Data Lakehouse pipeline built using AWS S3, Snowflake, dbt, and D
 This project demonstrates real-world data engineering and Data Governance best practices used in modern analytics platforms.
 
 ## ⭐ Architecture Overview
-<p align="center"> <img src="YOUR_ARCHITECTURE_IMAGE.png" width="700"/> </p>
+<p align="center"> <img src="images/architecture.png" width="700"/> </p>
 
 ### Tech Stack
 
@@ -126,7 +126,7 @@ Defined roles:
 
 #### Dynamic Data Masking
 
-* Automatic masking applied to sensitive PII(emails and Phone numbers)
+* Automatic masking applied to sensitive PII(Customer emails and names)
 
 * Analysts see masked outputs
 
