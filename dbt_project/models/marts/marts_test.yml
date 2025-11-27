@@ -1,0 +1,147 @@
+version: 2
+
+models:
+
+  # -----------------------------------
+  # mart_customer_360
+  # -----------------------------------
+  - name: mart_customer_360
+    description: "Customer 360 metrics from current dimension state"
+    columns:
+      - name: customer_id
+        tests:
+          - not_null
+          - unique
+          - relationships:
+              to: ref('dim_customers')
+              field: customer_id
+      # - name: total_revenue
+      #   tests:
+      #     - not_null
+      #     - dbt_utils.expression_is_true:
+      #         expression: "total_revenue >= 0"
+      # - name: number_of_orders
+      #   tests:
+      #     - not_null
+      #     - dbt_utils.expression_is_true:
+      #         expression: "number_of_orders >= 0"
+      # - name: days_since_last_order
+      #   tests:
+      #     - not_null
+      #     - dbt_utils.expression_is_true:
+      #         expression: "days_since_last_order >= 0"
+
+
+  # -----------------------------------
+  # product_performance
+  # -----------------------------------
+  - name: product_performance
+    description: "Product performance metrics"
+    columns:
+      - name: product_id
+        tests:
+          - not_null
+          - unique
+          - relationships:
+              to: ref('dim_products')
+              field: product_id
+      # - name: total_revenue
+      #   tests:
+      #     - not_null
+      #     - dbt_utils.expression_is_true:
+      #         expression: "total_revenue >= 0"
+      # - name: units_sold
+      #   tests:
+      #     - not_null
+      #     - dbt_utils.expression_is_true:
+      #         expression: "units_sold >= 0"
+      # - name: total_orders
+      #   tests:
+      #     - not_null
+      #     - dbt_utils.expression_is_true:
+      #         expression: "total_orders >= 0"
+
+
+  # -----------------------------------
+  # reseller
+  # -----------------------------------
+  - name: reseller
+    description: "Reseller performance metrics"
+    columns:
+      - name: reseller_id
+        tests:
+          - not_null
+          - unique
+          - relationships:
+              to: ref('dim_resellers')
+              field: reseller_id
+      # - name: total_revenue
+      #   tests:
+      #     - not_null
+      #     - dbt_utils.expression_is_true:
+      #         expression: "total_revenue >= 0"
+      # - name: products_sold
+      #   tests:
+      #     - not_null
+      #     - dbt_utils.expression_is_true:
+      #         expression: "products_sold >= 0"
+      # - name: quantities_sold
+      #   tests:
+      #     - not_null
+      #     - dbt_utils.expression_is_true:
+      #         expression: "quantities_sold >= 0"
+
+
+  # -----------------------------------
+  # sales_overview
+  # -----------------------------------
+  - name: sales_overview
+    description: "Detailed sales overview joining orders, order items, payments, shipments, and customer dimension"
+    columns:
+      - name: order_id
+        tests:
+          - not_null
+          - unique
+          - relationships:
+              to: ref('fact_orders')
+              field: order_id
+      - name: customer_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_customers')
+              field: customer_id
+      # - name: total_amount
+      #   tests:
+      #     - not_null
+      #     - dbt_utils.expression_is_true:
+      #         expression: "total_amount >= 0"
+      # - name: order_date
+      #   tests:
+      #     - not_null
+      # - name: number_of_items
+      #   tests:
+      #     - not_null
+      #     - dbt_utils.expression_is_true:
+      #         expression: "number_of_items >= 0"
+      # - name: total_discount
+      #   tests:
+      #     - not_null
+      #     - dbt_utils.expression_is_true:
+      #         expression: "total_discount >= 0"
+      # - name: shipment_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('fact_shipments')
+              field: shipment_id
+
+
+  # -----------------------------------
+  # int_shipping_information
+  # -----------------------------------
+  - name: mart_shipment_performance
+    description: "Aggregated shipping information joined to orders"
+    columns:
+      - name: delivery_days
+
