@@ -9,7 +9,7 @@ from datetime import datetime
 from botocore.exceptions import ClientError
 
 # ===================================================
-# 🔧 Configuration
+#  Configuration
 # ===================================================
 MYSQL_USER = "user"
 MYSQL_PASSWORD = "password"
@@ -43,7 +43,8 @@ def get_bucket_name(service_path="../terraform/services/s3"):
     outputs = json.loads(result.stdout)
     return outputs["bucket_name"]["value"]
 
-S3_BUCKET=get_bucket_name()
+# S3_BUCKET=get_bucket_name()
+S3_BUCKET = 'zalihat-ecommerce-raw-dev'
 # Create bucket if not exists
 def ensure_bucket_exists():
    
@@ -62,7 +63,7 @@ def ensure_bucket_exists():
 ensure_bucket_exists()
 
 # ===================================================
-# 🧠 Helper Functions
+# Helper Functions
 # ===================================================
 def load_state():
     try:
@@ -90,26 +91,26 @@ def update_state(table_name, new_timestamp, state):
     save_state(state)
 
 # ===================================================
-# 🚀 Ingest Function
+# Ingest Function
 # ===================================================
 def ingest_table(table_name, backfill=False, partition=True):
     """Extract table from MySQL and load to S3 (Parquet partitioned by year/month/day)"""
     state = load_state()
     last_ingested_at = get_last_ingested_time(table_name, state)
 
-    print(f"\n🔹 Processing table: {table_name}")
+    print(f"Processing table: {table_name}")
 
     # Full or incremental
     if backfill or last_ingested_at is None:
         query = f"SELECT * FROM {table_name}"
-        print("🧾 Full backfill triggered")
+        print("Full backfill triggered")
     else:
         query = f"SELECT * FROM {table_name} WHERE updated_at > '{last_ingested_at}'"
-        print(f"⏩ Incremental load since {last_ingested_at}")
+        print(f"Incremental load since {last_ingested_at}")
 
     df = pd.read_sql(query, engine)
     if df.empty:
-        print("✅ No new or updated records.")
+        print("No new or updated records.")
         return
 
     # Add ingestion metadata
@@ -140,13 +141,13 @@ def ingest_table(table_name, backfill=False, partition=True):
         ContentType="application/octet-stream"
     )
 
-    print(f"✅ Uploaded {len(df)} rows to S3 -> {object_name}")
+    print(f"Uploaded {len(df)} rows to S3 -> {object_name}")
 
     # Update state
     if "updated_at" in df.columns:
         new_max_time = df["updated_at"].max()
         update_state(table_name, str(new_max_time), state)
-        print(f"🕒 Updated ingestion state to {new_max_time}")
+        print(f"Updated ingestion state to {new_max_time}")
 
 
 # ===================================================
@@ -171,4 +172,4 @@ if __name__ == "__main__":
         else:
             ingest_table(table, backfill=FULL_BACKFILL, partition=True)
 
-    print("\n🎉 All tables processed successfully.")
+    print("All tables processed successfully.")

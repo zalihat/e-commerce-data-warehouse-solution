@@ -1,18 +1,55 @@
-with item_performance as (
-    select 
-        p.product_id,
-        product_name,
-        reseller_id,
-        order_id,
-        order_item_id,
-        quantity,
-        revenue
-    from {{ref('dim_products')}} as p
-    left join {{ref('fact_order_items')}} as oi
-        on p.product_id = oi.product_id
-    where p.is_current = True
+-- depends_on: {{ ref('fact_orders') }}
+
+{{ config(
+    materialized='incremental',
+    unique_key='reseller_id',
+    incremental_strategy='merge'
+) }}
+
+-- Only current products
+with current_products as (
+    select *
+    from {{ ref('dim_products') }}
+    where is_current = true
 ),
 
+-- Precompute last order date in target table for incremental runs
+last_order_date as (
+    {% if is_incremental() %}
+    select coalesce(max(order_date), '1900-01-01') as last_date
+    from {{ ref('fact_orders') }}
+    {% else %}
+    select '1900-01-01'::date as last_date
+    {% endif %}
+),
+
+-- Only new delivered orders
+new_orders as (
+    select o.order_id
+    from {{ ref('fact_orders') }} o
+    cross join last_order_date l
+    where lower(o.order_status) = 'delivered'
+      and o.order_date > l.last_date
+),
+
+-- Combine product and order data
+item_performance as (
+    select 
+        p.product_id,
+        p.product_name,
+        p.reseller_id,
+        oi.order_id,
+        oi.order_item_id,
+        oi.quantity,
+        oi.revenue
+    from current_products p
+    left join {{ ref('fact_order_items') }} oi
+        on p.product_id = oi.product_id
+    join new_orders n
+        on oi.order_id = n.order_id
+),
+
+-- Aggregate per reseller
 products_performance as (
     select 
         reseller_id,
@@ -23,25 +60,21 @@ products_performance as (
         sum(revenue) as total_revenue
     from item_performance
     group by reseller_id
-
 )
 
-
+-- Final reseller 360 view
 select 
     r.reseller_id,
-    reseller_name,
-    reseller_email,
-    reseller_country,
-    reseller_join_date,
-    products,
-    products_sold,
-    unique_orders,
-    total_revenue,
-    quantities_sold
-
-
-from {{ref('dim_resellers')}} as r
-left join products_performance as p
-    on r.reseller_id = p.reseller_id
-
-where r.is_current = True
+    r.reseller_name,
+    r.reseller_email,
+    r.reseller_country,
+    r.reseller_join_date,
+    pp.products,
+    pp.products_sold,
+    pp.unique_orders,
+    pp.total_revenue,
+    pp.quantities_sold
+from {{ ref('dim_resellers') }} r
+left join products_performance pp
+    on r.reseller_id = pp.reseller_id
+where r.is_current = true
