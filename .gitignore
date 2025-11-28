@@ -208,4 +208,4 @@ __marimo__/
 .terraform/
 .terraform.lock.hcl 
 data/
-.tmp_dagster_home_ixqlq3qd
+.tmp_dagster_home_ixqlq3qd/
